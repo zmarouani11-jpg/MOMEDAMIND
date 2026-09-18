@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momedamin</title>
+<meta name="description" content="Momedamin — beats and songs, straight from the source. Listen and buy the ones that stick.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink: #14141c;
+    --ink-soft: #1b1b25;
+    --paper: #f1ede4;
+    --muted: #918f9c;
+    --gold: #d9a441;
+    --teal: #3e6b64;
+    --line: #2a2a35;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "IBM Plex Sans", sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: inherit; }
+
+  .wrap{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(20,20,28,0.88);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+
+  .logotype{
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+  }
+
+  nav ul{
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a{
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  nav a:hover{ color: var(--paper); }
+
+  .hero{
+    padding: 96px 0 0 0;
+    position: relative;
+  }
+
+  .hero h1{
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 800;
+    font-size: clamp(64px, 13vw, 148px);
+    line-height: 0.88;
+    margin: 0 0 26px 0;
+    letter-spacing: 0.01em;
+  }
+
+  .hero p{
+    max-width: 480px;
+    font-size: 18px;
+    color: var(--muted);
+    margin: 0 0 36px 0;
+  }
+
+  .hero-actions{
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 56px;
+  }
+
+  .btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 26px;
+    border: 1px solid var(--paper);
+    background: transparent;
+    color: var(--paper);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .btn:hover{
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .btn-quiet{
+    border-color: transparent;
+    color: var(--muted);
+    padding-left: 0;
+  }
+
+  .btn-quiet:hover{
+    background: transparent;
+    color: var(--paper);
+  }
+
+  #waveform{
+    display: block;
+    width: 100%;
+    height: 130px;
+    border-top: 1px solid var(--line);
+  }
+
+  section{
+    padding: 84px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  h2{
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    margin: 0 0 8px 0;
+  }
+
+  .section-lede{
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 0 48px 0;
+    font-size: 16px;
+  }
+
+  .track{
+    display: grid;
+    grid-template-columns: 32px 1fr auto auto auto;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .track:last-child{ border-bottom: 1px solid var(--line); }
+
+  .track-index{
+    font-family: "IBM Plex Mono", monospace;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .track-info h3{
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .track-info span{
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+
+  .track-duration{
+    font-family: "IBM Plex Mono", monospace;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .play-btn{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--paper);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .play-btn:hover{ border-color: var(--gold); }
+
+  .play-btn.is-playing{
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .buy-btn{
+    white-space: nowrap;
+    padding: 9px 18px;
+    background: var(--teal);
+    color: var(--paper);
+    border: none;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .buy-btn:hover{ background: #4c837a; }
+
+  .about-grid{
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .about-grid p{ margin: 0 0 18px 0; color: #d8d5cc; }
+
+  .pull{
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
+    font-family: "Big Shoulders Display", sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--paper);
+    margin: 0;
+  }
+
+  .support-box{
+    background: var(--ink-soft);
+    border: 1px solid var(--line);
+    padding: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .support-box p{
+    margin: 0;
+    color: var(--muted);
+    max-width: 420px;
+    font-size: 15px;
+  }
+
+  footer{
+    padding: 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .social-links{
+    display: flex;
+    gap: 22px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .social-links a{
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    transition: color 0.15s ease;
+  }
+
+  .social-links a:hover{ color: var(--paper); }
+
+  .fine-print{
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  @media (max-width: 680px){
+    .about-grid{ grid-template-columns: 1fr; }
+    .track{
+      grid-template-columns: 24px 1fr auto;
+      row-gap: 10px;
+    }
+    .track-duration{ display: none; }
+    .buy-btn{ grid-column: 1 / -1; text-align: center; }
+    .support-box{ flex-direction: column; align-items: flex-start; }
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="logotype" href="#top">MOMEDAMIN</a>
+    <nav>
+      <ul>
+        <li><a href="#music">Music</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#support">Support</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="hero">
+    <div class="wrap">
+      <h1>MOMEDAMIN</h1>
+      <p>Songs written, produced, and mixed alone, then posted the day they're finished. No label, no release calendar — just the next one, when it's ready.</p>
+      <div class="hero-actions">
+        <button class="btn" id="hero-play">Play the latest track</button>
+        <a class="btn btn-quiet" href="#music">See all tracks</a>
+      </div>
+    </div>
+    <canvas id="waveform" aria-hidden="true"></canvas>
+  </div>
+
+  <section id="music">
+    <div class="wrap">
+      <h2>Tracks</h2>
+      <p class="section-lede">Stream anything for free. Buy the ones you want to keep — you'll get the full-quality file straight from PayPal.</p>
+
+      <div id="tracklist"></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about-grid">
+      <div>
+        <p>Momedamin started making beats on a cracked version of FL Studio and never really stopped. Every track on this page is one person — writing, recording, producing, and mixing — start to finish, before it goes anywhere else.</p>
+        <p>There's no rollout plan. A song goes up when it's done, not when a calendar says it should. That's the whole method.</p>
+      </div>
+      <p class="pull">"If it's not ready, it doesn't go up. If it's ready, it goes up today."</p>
+    </div>
+  </section>
+
+  <section id="support" style="border-bottom: none;">
+    <div class="wrap">
+      <h2>Support the music</h2>
+      <p class="section-lede">Everything here is self-funded and self-released. Buying a track directly is the most direct way to support what comes next.</p>
+      <div class="support-box">
+        <p>Prefer to just send something? Any amount helps cover studio time and gear.</p>
+        <a class="btn" id="tip-btn" href="#" target="_blank" rel="noopener">Send a tip</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; width:100%;">
+    <p class="fine-print">&copy; <span id="year"></span> Momedamin. All tracks self-released.</p>
+    <ul class="social-links">
+      <li><a href="#" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="#" target="_blank" rel="noopener">YouTube</a></li>
+      <li><a href="#" target="_blank" rel="noopener">SoundCloud</a></li>
+    </ul>
+  </div>
+</footer>
+
+<audio id="audio-player" preload="none"></audio>
+
+<script>
+/* =========================================================
+   CONFIG — edit these to make the site yours
+   ========================================================= */
+
+// Your PayPal.me handle (from paypal.me/yourname). Buy buttons
+// link to https://www.paypal.com/paypalme/HANDLE/PRICE
+const PAYPAL_HANDLE = "yourpaypalname";
+
+// Used for the "Send a tip" button (no fixed amount).
+const TIP_URL = `https://www.paypal.com/paypalme/${PAYPAL_HANDLE}`;
+
+// Your tracks. Put the actual audio files in an /audio folder
+// in your repo and point src at them, e.g. "audio/track-1.mp3".
+const TRACKS = [
+  {
+    title: "Night Shift",
+    tag: "Single · 2026",
+    duration: "3:12",
+    price: 2,
+    src: "audio/night-shift.mp3"
+  },
+  {
+    title: "No Ceiling",
+    tag: "Single · 2026",
+    duration: "2:47",
+    price: 2,
+    src: "audio/no-ceiling.mp3"
+  },
+  {
+    title: "Momedamin Type Beat 04",
+    tag: "Beat · instrumental",
+    duration: "2:58",
+    price: 15,
+    src: "audio/beat-04.mp3"
+  }
+];
+
+/* =========================================================
+   Render tracklist
+   ========================================================= */
+
+const listEl = document.getElementById("tracklist");
+const audio = document.getElementById("audio-player");
+let currentIndex = null;
+
+TRACKS.forEach((track, i) => {
+  const row = document.createElement("div");
+  row.className = "track";
+  row.innerHTML = `
+    <span class="track-index">${String(i + 1).padStart(2, "0")}</span>
+    <div class="track-info">
+      <h3>${track.title}</h3>
+      <span>${track.tag}</span>
+    </div>
+    <span class="track-duration">${track.duration}</span>
+    <button class="play-btn" data-index="${i}" aria-label="Play ${track.title}">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>
+    </button>
+    <a class="buy-btn" href="https://www.paypal.com/paypalme/${PAYPAL_HANDLE}/${track.price}" target="_blank" rel="noopener">Buy · $${track.price}</a>
+  `;
+  listEl.appendChild(row);
+});
+
+document.getElementById("tip-btn").href = TIP_URL;
+
+/* =========================================================
+   Playback
+   ========================================================= */
+
+function iconFor(playing){
+  return playing
+    ? '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="1.5" width="3.5" height="11"/><rect x="8.5" y="1.5" width="3.5" height="11"/></svg>'
+    : '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>';
+}
+
+function setPlaying(index){
+  document.querySelectorAll(".play-btn").forEach(btn => {
+    const btnIndex = Number(btn.dataset.index);
+    const isThis = btnIndex === index;
+    btn.classList.toggle("is-playing", isThis);
+    btn.innerHTML = iconFor(isThis);
+  });
+}
+
+function playTrack(index){
+  const track = TRACKS[index];
+  if (currentIndex === index && !audio.paused){
+    audio.pause();
+    setPlaying(null);
+    currentIndex = null;
+    return;
+  }
+  audio.src = track.src;
+  audio.play().catch(() => {
+    console.warn(`Couldn't play ${track.src}. Add the real audio file to your repo.`);
+  });
+  currentIndex = index;
+  setPlaying(index);
+  startVisualizer();
+}
+
+listEl.addEventListener("click", (e) => {
+  const btn = e.target.closest(".play-btn");
+  if (!btn) return;
+  playTrack(Number(btn.dataset.index));
+});
+
+document.getElementById("hero-play").addEventListener("click", () => playTrack(0));
+
+audio.addEventListener("ended", () => {
+  setPlaying(null);
+  currentIndex = null;
+});
+
+/* =========================================================
+   Audio-reactive waveform (idles gently, reacts when playing)
+   ========================================================= */
+
+const canvas = document.getElementById("waveform");
+const ctx = canvas.getContext("2d");
+let audioCtx, analyser, dataArray, sourceNode;
+let t = 0;
+
+function resizeCanvas(){
+  canvas.width = canvas.clientWidth * devicePixelRatio;
+  canvas.height = canvas.clientHeight * devicePixelRatio;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function startVisualizer(){
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 128;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    sourceNode = audioCtx.createMediaElementSource(audio);
+    sourceNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  } catch (err) {
+    // Web Audio unavailable — visualizer will just idle.
+  }
+}
+
+function draw(){
+  requestAnimationFrame(draw);
+  t += 0.02;
+
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const bars = 64;
+  const gap = w / bars;
+  const playing = analyser && !audio.paused;
+
+  if (playing) analyser.getByteFrequencyData(dataArray);
+
+  for (let i = 0; i < bars; i++){
+    let amp;
+    if (playing){
+      amp = (dataArray[i % dataArray.length] / 255) * 0.85 + 0.05;
+    } else {
+      amp = 0.12 + Math.abs(Math.sin(t + i * 0.35)) * 0.10;
+    }
+    const barH = amp * h;
+    const x = i * gap + gap * 0.25;
+    const barW = gap * 0.5;
+    ctx.fillStyle = playing ? "#d9a441" : "#3a3a46";
+    ctx.fillRect(x, h - barH, barW, barH);
+  }
+}
+draw();
+
+/* =========================================================
+   Misc
+   ========================================================= */
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
