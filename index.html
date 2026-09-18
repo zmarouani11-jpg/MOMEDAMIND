@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,6 +33,18 @@
     font-family: "IBM Plex Sans", sans-serif;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  /* subtle editorial grain, purely decorative */
+  body::before{
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   a{ color: inherit; }
@@ -89,6 +102,16 @@
     position: relative;
   }
 
+  .cover-line{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    color: var(--gold);
+    margin: 0 0 18px 0;
+    opacity: 0;
+    animation: rise 0.6s ease forwards;
+    animation-delay: 0.1s;
+  }
+
   .hero h1{
     font-family: "Big Shoulders Display", sans-serif;
     font-weight: 800;
@@ -96,6 +119,9 @@
     line-height: 0.88;
     margin: 0 0 26px 0;
     letter-spacing: 0.01em;
+    opacity: 0;
+    animation: rise 0.7s ease forwards;
+    animation-delay: 0.22s;
   }
 
   .hero p{
@@ -103,6 +129,9 @@
     font-size: 18px;
     color: var(--muted);
     margin: 0 0 36px 0;
+    opacity: 0;
+    animation: rise 0.6s ease forwards;
+    animation-delay: 0.4s;
   }
 
   .hero-actions{
@@ -110,6 +139,22 @@
     align-items: center;
     gap: 22px;
     margin-bottom: 56px;
+    opacity: 0;
+    animation: rise 0.6s ease forwards;
+    animation-delay: 0.52s;
+  }
+
+  @keyframes rise{
+    from{ opacity: 0; transform: translateY(14px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cover-line, .hero h1, .hero p, .hero-actions{
+      opacity: 1;
+      animation: none;
+      transform: none;
+    }
   }
 
   .btn{
@@ -327,10 +372,6 @@
     outline: 2px solid var(--gold);
     outline-offset: 2px;
   }
-
-  @media (prefers-reduced-motion: reduce){
-    html{ scroll-behavior: auto; }
-  }
 </style>
 </head>
 <body>
@@ -352,6 +393,7 @@
 
   <div class="hero">
     <div class="wrap">
+      <p class="cover-line">New: "Night Shift" — out now</p>
       <h1>MOMEDAMIN</h1>
       <p>Songs written, produced, and mixed alone, then posted the day they're finished. No label, no release calendar — just the next one, when it's ready.</p>
       <div class="hero-actions">
@@ -408,46 +450,14 @@
 <audio id="audio-player" preload="none"></audio>
 
 <script>
-/* =========================================================
-   CONFIG — edit these to make the site yours
-   ========================================================= */
-
-// Your PayPal.me handle (from paypal.me/yourname). Buy buttons
-// link to https://www.paypal.com/paypalme/HANDLE/PRICE
 const PAYPAL_HANDLE = "yourpaypalname";
-
-// Used for the "Send a tip" button (no fixed amount).
 const TIP_URL = `https://www.paypal.com/paypalme/${PAYPAL_HANDLE}`;
 
-// Your tracks. Put the actual audio files in an /audio folder
-// in your repo and point src at them, e.g. "audio/track-1.mp3".
 const TRACKS = [
-  {
-    title: "Night Shift",
-    tag: "Single · 2026",
-    duration: "3:12",
-    price: 2,
-    src: "audio/night-shift.mp3"
-  },
-  {
-    title: "No Ceiling",
-    tag: "Single · 2026",
-    duration: "2:47",
-    price: 2,
-    src: "audio/no-ceiling.mp3"
-  },
-  {
-    title: "Momedamin Type Beat 04",
-    tag: "Beat · instrumental",
-    duration: "2:58",
-    price: 15,
-    src: "audio/beat-04.mp3"
-  }
+  { title: "Night Shift", tag: "Single · 2026", duration: "3:12", price: 2, src: "audio/night-shift.mp3" },
+  { title: "No Ceiling", tag: "Single · 2026", duration: "2:47", price: 2, src: "audio/no-ceiling.mp3" },
+  { title: "Momedamin Type Beat 04", tag: "Beat · instrumental", duration: "2:58", price: 15, src: "audio/beat-04.mp3" }
 ];
-
-/* =========================================================
-   Render tracklist
-   ========================================================= */
 
 const listEl = document.getElementById("tracklist");
 const audio = document.getElementById("audio-player");
@@ -472,10 +482,6 @@ TRACKS.forEach((track, i) => {
 });
 
 document.getElementById("tip-btn").href = TIP_URL;
-
-/* =========================================================
-   Playback
-   ========================================================= */
 
 function iconFor(playing){
   return playing
@@ -522,10 +528,6 @@ audio.addEventListener("ended", () => {
   currentIndex = null;
 });
 
-/* =========================================================
-   Audio-reactive waveform (idles gently, reacts when playing)
-   ========================================================= */
-
 const canvas = document.getElementById("waveform");
 const ctx = canvas.getContext("2d");
 let audioCtx, analyser, dataArray, sourceNode;
@@ -548,9 +550,7 @@ function startVisualizer(){
     sourceNode = audioCtx.createMediaElementSource(audio);
     sourceNode.connect(analyser);
     analyser.connect(audioCtx.destination);
-  } catch (err) {
-    // Web Audio unavailable — visualizer will just idle.
-  }
+  } catch (err) {}
 }
 
 function draw(){
@@ -582,10 +582,6 @@ function draw(){
   }
 }
 draw();
-
-/* =========================================================
-   Misc
-   ========================================================= */
 
 document.getElementById("year").textContent = new Date().getFullYear();
 </script>
